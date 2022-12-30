@@ -1,0 +1,99 @@
+#include <iostream>
+#include <unordered_map>
+using namespace std;
+
+
+int T = 10000, N = 100000000, N0 = 1, sum2 = 1, sum3 = 1;
+unordered_map <int, int> b2;
+unordered_map <int, int> b3;
+unordered_map <int, int> specials;
+
+
+
+
+void base2(int pos){
+
+	if(b2[pos] == 0){
+		b2[pos] = 1;
+		sum2++;
+		for(int i = 0; i < pos; i++){
+			b2[i] = 0;
+			sum2--;
+		}
+	}
+	else
+		base2(pos+1);
+}
+
+
+
+void base3(int pos){
+	if(b3[pos] < 2){
+		b3[pos]++;
+		sum3++;
+		for(int i = 0; i < pos; i++){
+			b3[i] = 0;
+			sum3-= 2;
+		}
+	}
+	else
+		base3(pos+1);
+}
+
+
+
+
+void special()
+{
+	for(int i = N0+1; i <= N; i++)
+	{
+		base2(0);
+		base3(0);
+//		for(int j = 0; j < b2.size(); j++)
+//			cout << b2[j];
+//		cout << endl;
+//		for(int j = 0; j < b3.size(); j++)
+//				cout << b3[j];
+//		cout << endl;
+
+		if(sum2 == sum3){
+			for(int j = 0; j < b2.size(); j++)
+				cout << b2[j];
+			cout << endl;
+			for(int j = 0; j < b3.size(); j++)
+					cout << b3[j];
+			cout << endl;
+			cout << "SUM: " << i << endl << endl;
+		}
+		specials[i] = specials[i-1] + ((sum2 == sum3)? 1:0);
+	}
+}
+
+
+
+
+
+
+
+int main(){
+
+	cin >> T;
+	b2[0] = 1;
+	b3[0] = 1;
+	specials[1] = 1;
+
+
+	for(int t = 0; t < T; t++){
+		cin >> N;
+
+		if(N <= N0)
+			cout << specials[N] << " ";
+		else{
+			special();
+			cout << specials[N] << " ";
+		}
+
+		N0 = N;
+	}
+
+}

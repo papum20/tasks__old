@@ -1,0 +1,373 @@
+
+
+//BANALE
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+#include <iostream>
+#include <set>
+#include <unordered_map>
+#include <vector>
+#include <algorithm>
+using namespace std;
+
+
+
+
+unordered_map <int, set<int> > F;	//friends
+struct person{
+	int n, l;	//index, n friends, n required
+};
+auto byL = [](const person &a, const person &b){
+	return a.l < b.l;
+};
+vector <person> P;	//people
+//unordered_map <int, vector<int> > F2;	//whose is friend
+
+
+
+set <int> ordered;
+int tot = 0;
+void ricorsiva()
+{
+	sort(P.begin(), P.end(), byL);
+
+	for(auto i:P) cout << i.n<<" "<<i.l<<endl;
+	cout <<endl;
+
+
+	for(int i = 0; i < P.size(); i++){
+		cout << "F: " << P[i].n << " " << P[i].l <<endl;
+		int friends = 0;
+
+		if(friends < P[i].l)
+		{
+			for(auto j:F[P[i].n]){
+				cout << "j" << j << endl;
+				if(ordered.find(j) != ordered.end()){
+					cout << "OLE\n";
+					friends++;
+					if(friends >= P[i].l) break;
+				}
+			}
+
+		}
+
+			if(friends >= P[i].l)
+			{
+				cout << "OLEOLE\n";
+				tot++;
+				ordered.insert(P[i].n);
+				P.erase(P.begin()+i);
+				ricorsiva();
+				return;
+			}
+
+	}
+
+}
+
+
+
+
+
+
+
+int main(){
+
+	int N;
+	cin >> N;
+
+
+	int countZero = 0;
+
+	for(int i = 0; i < N; i++){
+		int m, l;
+		cin >> m >> l;
+		P.push_back({i,l});
+		if(l == 0) countZero++;
+		for(int j = 0; j < m; j++){
+			int tmp;
+			cin >> tmp;
+			F[i].insert(tmp);
+//			F2[tmp].push_back(i);
+		}
+	}
+
+//	for(int i = 0; i < N; i++){
+//		for(auto j:F2[i]) cout << j;
+//		cout <<endl;
+//	}
+
+	ricorsiva();
+	cout << tot;
+//	cout << tot;
+
+
+}
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+//CZ
+
+
+
+
+#include <iostream>
+#include <set>
+#include <unordered_map>
+#include <vector>
+#include <algorithm>
+using namespace std;
+
+
+
+
+//unordered_map <int, set<int> > F;	//friends
+struct person{
+	int n, l;	//index, n friends, n required
+};
+auto byL = [](const person &a, const person &b){
+	return a.l < b.l;
+};
+vector <person> P;	//people
+unordered_map <int, vector<int> > F2;	//whose is friend
+
+
+
+
+//int tot = 0;
+int ricorsiva(int CZ)
+{
+	sort(P.begin(), P.end(), byL);
+
+	for(auto i:P) cout << i.n<<" "<<i.l<<endl;
+	cout <<endl;
+
+	if(P.size() == 0 || P[0].l > 0) return 0;
+
+	else{
+//		for(auto i:F2[P[0].n]){
+		for(int i = 0; i < F2[P[0].n].size(); i++){
+			cout << "F2: " << F2[P[0].n][i]<<endl;
+			for(int j = CZ; j < P.size(); j++){
+				cout << P[j].n << " " << P[j].l << endl;
+				if(P[j].n == F2[P[0].n][i] && P[j].l > 0){
+					cout << "OLE\n";
+					P[j].l--;
+					if(P[j].l <= 0) CZ++;
+				}
+			}
+		}
+
+		P.erase(P.begin());
+//		tot++;
+		return 1+ricorsiva(CZ-1);
+	}
+
+}
+
+
+
+
+
+
+
+int main(){
+
+	int N;
+	cin >> N;
+
+
+	int countZero = 0;
+
+	for(int i = 0; i < N; i++){
+		int m, l;
+		cin >> m >> l;
+		P.push_back({i,l});
+		if(l == 0) countZero++;
+		for(int j = 0; j < m; j++){
+			int tmp;
+			cin >> tmp;
+//			F[i].insert(tmp);
+			F2[tmp].push_back(i);
+		}
+	}
+
+//	for(int i = 0; i < N; i++){
+//		for(auto j:F2[i]) cout << j;
+//		cout <<endl;
+//	}
+
+	cout << ricorsiva(countZero);
+//	cout << tot;
+
+
+}
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+//PRIMO
+
+
+
+int main(){
+
+	int N;
+	cin >> N;
+
+
+	int countZero = 0;
+
+	for(int i = 0; i < N; i++){
+		int m, l;
+		cin >> m >> l;
+		P.push_back({i,l});
+		if(l == 0) countZero++;
+		for(int j = 0; j < m; j++){
+			int tmp;
+			cin >> tmp;
+//			F[i].insert(tmp);
+			F2[tmp].push_back(i);
+		}
+	}
+
+//	for(int i = 0; i < N; i++){
+//		for(auto j:F2[i]) cout << j;
+//		cout <<endl;
+//	}
+
+	cout << ricorsiva(countZero);
+//	cout << tot;
+
+
+}
+
+
+
+
+
+
+
+
+
+
+
+
+#include <iostream>
+#include <set>
+#include <unordered_map>
+#include <vector>
+#include <algorithm>
+using namespace std;
+
+
+
+
+//unordered_map <int, set<int> > F;	//friends
+struct person{
+	int n, l;	//index, n friends, n required
+};
+auto byL = [](const person &a, const person &b){
+	return a.l < b.l;
+};
+vector <person> P;	//people
+unordered_map <int, set<int> > F2;	//whose is friend
+
+
+
+
+//int tot = 0;
+int ricorsiva()
+{
+	sort(P.begin(), P.end(), byL);
+
+	for(auto i:P) cout << i.n<<" "<<i.l<<endl;
+	cout <<endl;
+
+	if(P.size() == 0 || P[0].l > 0) return 0;
+
+	else{
+		for(auto i:F2[P[0].n]){
+			for(int j = 0; j < P.size(); j++)
+				if(P[j].n == i) P[j].l--;
+		}
+
+		P.erase(P.begin());
+//		tot++;
+		return 1+ricorsiva();
+	}
+
+}
+
+
+
+
+
+
+
+int main(){
+
+	int N;
+	cin >> N;
+
+	for(int i = 0; i < N; i++){
+		int m, l;
+		cin >> m >> l;
+		P.push_back({i,l});
+		for(int j = 0; j < m; j++){
+			int tmp;
+			cin >> tmp;
+//			F[i].insert(tmp);
+			F2[tmp].insert(i);
+		}
+	}
+
+//	for(int i = 0; i < N; i++){
+//		for(auto j:F2[i]) cout << j;
+//		cout <<endl;
+//	}
+
+	cout << ricorsiva();
+//	cout << tot;
+
+
+}

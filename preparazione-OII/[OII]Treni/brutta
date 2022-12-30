@@ -1,0 +1,244 @@
+#include <iostream>
+using namespace std;
+
+
+
+
+
+int ricorsiva(int N, int A[], int B[], int pos, int t1, int t2, int start)
+{
+
+	cout << pos << " ";
+	if(pos == N){
+		cout <<1<<" "<< max(t1,t2)<<endl;
+		return max(t1,t2);}
+
+
+	else if(pos == 0){
+		cout <<2<<" "<<A[0]<<endl;
+		return A[0]+ricorsiva(N,A,B, 1,0,0,-1);}
+
+
+	else if(start == -1 && B[pos] > A[pos] + A[pos-1]){
+		cout <<3<<" " << B[pos]<<endl;
+			return ricorsiva(N,A,B, pos+1, B[pos]-A[pos-1], 0, pos);}
+
+	else if(start != -1 && B[pos] > A[pos] + A[pos-1]){
+		if( (pos - start)%2 == 0){
+			cout <<4<<" " <<B[pos]<<endl;
+			return ricorsiva(N,A,B, pos+1, t1+B[pos], t2, start);}
+		else{
+			cout <<5<<" " <<B[pos]<<endl;
+			return ricorsiva(N,A,B, pos+1, t1, t2+B[pos], start);}
+	}
+
+
+	else if(start == -1){
+		cout <<6<<" "<<A[pos]<<endl;
+		return A[pos] + ricorsiva(N,A,B, pos+1, 0, 0, -1);}
+
+	else{
+		cout <<7<<" " <<A[pos]<<" " <<max(t1,t2)<<endl;
+		return A[pos] + max(t1, t2) + ricorsiva(N,A,B, pos+1, 0, 0, -1);}
+
+}
+
+
+
+
+
+
+int tempo_massimo(int N, int A[], int B[])
+{
+	A[0] = max(A[0], B[0]);
+
+
+	return ricorsiva(N,A,B, 0, 0, 0, -1);
+}
+
+
+
+
+
+
+
+int main(){
+
+
+	int n;
+	cin >> n;
+	int a[n], b[n];
+
+	for(int i = 0; i < n; i++){
+		cin >> a[i];
+		cin >> b[i];
+	}
+
+
+
+	cout << tempo_massimo(n, a, b);
+
+
+}
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+//return ricorsiva(N,A,B,pos+1, B[pos]-((pos==1)?max(A[0],B[0]):A[pos-1]), 0, pos);
+
+
+
+
+
+
+
+
+
+//#include <iostream>
+//using namespace std;
+//
+//
+//
+//
+//
+//
+//int tempo_massimo(int N, int A[], int B[])
+//{
+//	A[0] = max(A[0], B[0]);
+//
+//
+//    int time = 0, t1 = 0, t2 = 0, start = -1;
+//    for(int pos = 0; pos<=N; pos++)
+//    {
+//		if(pos == N)
+//			time += max(t1,t2);
+//
+//
+//		else if(pos == 0)
+//			time += A[0];
+//
+//
+//		else if(start == -1 && B[pos] > A[pos] + A[pos-1]){
+//			t1 += B[pos]-A[pos-1];
+//			start = pos;
+//		}
+//
+//		else if(start != -1 && B[pos] > A[pos] + B[pos-1]){
+//			if( (pos - start)%2 == 0)
+//				t1 += B[pos];
+//			else
+//				t2 += B[pos];
+//		}
+//
+//
+//		else if(start == -1){
+//			time += A[pos];
+//			t1 = 0;
+//			t2 = 0;
+//			start = -1;
+//		}
+//
+//		else{
+//			time += A[pos] + max(t1,t2);
+//			t1 = 0;
+//			t2 = 0;
+//			start = -1;
+//		}
+//    }
+//
+//
+//
+//	return time;
+//}
+
+
+
+
+
+
+
+
+
+
+
+
+//#include <iostream>
+//#include <unordered_map>
+//using namespace std;
+//
+//
+//
+//int mx = 0;
+//
+//
+//
+//void ricorsiva(int N, int A[], int B[], int start, int pos, bool forward){
+//
+//	if(pos == N)
+//		return;
+//
+//
+//	if(A[pos] + A[pos-1] >= B[pos]){
+//
+//	}
+//	else{
+//		if(forward){
+//			mx += B[pos] - (A[pos] + A[pos-1]);
+//			A[pos] = B[pos];
+//			mx += A[pos-2];
+//		}
+//
+//
+//	}
+//
+//	ricorsiva(N, A, B, (forward)? start:pos+1, pos+1, forward);
+//
+//}
+//
+//
+//
+//int tempo_massimo(int N, int A[], int B[])
+//{
+//	for(int i = 0; i < N; i++)
+//		mx += A[i];
+//
+//
+//	if(B[0] > A[0]){
+//		mx += B[0] - A[0];
+//		A[0] = B[0];
+//	}
+//	ricorsiva(N, A, B, 1, 1, false);
+//
+//
+//	return mx;
+//}
+//
+//
+//
+//
+//
+//int main(){
+//
+//
+//	int N;
+//	cin >> N;
+//
+//	int A[N], B[N];
+//	for(int i = 0; i < N; i++)
+//		cin >> A[i] >> B[i];
+//
+//
+//	cout << tempo_massimo(N, A, B);
+//
+//}

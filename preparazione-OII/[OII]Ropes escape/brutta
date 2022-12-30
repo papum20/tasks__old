@@ -1,0 +1,404 @@
+#include <iostream>
+#include <unordered_map>
+using namespace std;
+
+
+
+
+int N = 100000, tot = 0;
+unordered_map <int, int> mx;
+int P[100000];	//parents
+
+
+
+int main(){
+
+	cin >> N;
+
+
+	for(int i = 0; i < N; i++)
+		cin >> P[i];
+
+
+
+	for(int i = 0; i < N; i++)
+	{
+		int V;	//value
+		cin >> V;
+		tot += V;
+
+
+		mx[P[i]] = max(mx[P[i]], V);
+
+
+		if(i >= 2 && P[i] < P[i-1]){	//o 2?
+			for(int j = P[i-1]; j > P[i]; j--){
+				tot -= mx[j];
+				mx[j] = 0;
+			}
+		}
+
+	}
+
+
+	for(int j = P[N-1]; j >= 0; j--)
+		tot -= mx[j];
+
+
+
+
+	cout << tot;
+
+}
+
+
+
+
+
+
+
+
+/*#include <iostream>
+#include <vector>
+//#include <unordered_map>
+using namespace std;
+
+
+int main(){
+
+	int64_t n, spesa = 0, l_max = 0;	//level_max
+	cin >> n;
+
+	vector<int64_t> parent;
+	for(int64_t i = 0; i < n; i++){
+		int64_t tmp;
+		cin >> tmp;
+		parent.push_back(tmp);
+		if(tmp > l_max){
+			l_max++;	}
+	}
+
+	vector<int64_t> max(l_max+1, 0);
+//	for(int64_t i = 0; i < l_max+1; i++){
+//		max[i] = 0;
+//	}
+
+
+	int64_t level = 0;
+/*	vector <int64_t> times;
+	for(int64_t i = 0; i < n; i++){
+//		int time;
+		cin >> times[i];
+		spesa += times[i];
+	}
+*
+//	for(int64_t i = 0; i < n; i++){
+	for(auto p:parent){
+		int64_t time;
+		cin >> time;
+		spesa += time;
+
+		if(p < level){
+			for(int64_t l = level; l > p; l--){
+				//spesa -= max[l];
+				//max[l] = 0;
+				spesa -= *(max.begin()+l);
+				max.at(l) = 0;
+			}
+		}
+		level = p;
+//		cout << time << " " << max[i] <<" " << (time>max[i])<<"\n";
+		if(time > max.at(p)){
+			max.at(p) = time;
+//			cout << max[i];
+		}
+	}
+
+/*	for(int64_t l = level; l >= 0; l--){
+		spesa -= max[l];
+	}
+*
+	for(auto m:max){
+		spesa -= m;
+	}
+
+	cout << spesa;
+
+}
+
+
+
+
+*/
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+/*
+int main(){
+
+	int n, spesa = 0, n_max = 0;
+	cin >> n;
+
+	int parent[n];
+
+	for(int i = 0; i < n; i++){
+		int tmp;
+		cin >> tmp;
+		parent[i] = tmp;
+		if(tmp > n_max)
+			n_max = tmp;
+	}
+
+//	cout << (*(whip.begin())).p;
+
+
+
+	int max[n_max + 1];
+	for(int i = 0; i <= n_max; i++){
+		max[i] = 0;
+	}
+
+
+
+	int level = 0;
+	for(int i = 0; i < n; i++){
+		int tmp;
+		cin >> tmp;
+		spesa += tmp;
+
+
+		if(tmp > max[parent[i]])
+			max[parent[i]] = tmp;
+
+		if( parent[i] < level){
+			for(int x = level; x > parent[i]; x--){
+				spesa -= max[x];
+				max[x] = 0;
+			}
+		}
+
+		level = parent[i];
+
+		cout << spesa << " " << level <<"\n";
+	}
+
+
+	for(int x = level; x >= 0; x--){
+		cout << spesa << "\n";
+		spesa -= max[x];
+	}
+
+
+
+
+	cout << spesa;
+
+}
+
+
+
+*/
+
+
+
+
+
+/*
+
+
+int main(){
+
+	int n, spesa = 0, n_max = 0;
+	cin >> n;
+
+	vector<int> parent;
+
+	for(int i = 0; i < n; i++){
+		string tmp;
+		cin >> tmp;
+		parent.push_back(stoi(tmp));
+		if(stoi(tmp) > n_max)
+			n_max = stoi(tmp);
+	}
+
+//	cout << (*(whip.begin())).p;
+
+
+
+	unordered_map<int, int> max;
+	for(int i = 0; i <= n_max; i++){
+		max[i] = 0;
+	}
+
+
+
+	int level = 0;
+	for(int i = 0; i < n; i++){
+		string tmp;
+		cin >> tmp;
+		spesa += stoi(tmp);
+
+
+		if(stoi(tmp) > max[*(parent.begin()+i)])
+			max[*(parent.begin()+i)] = stoi(tmp);
+
+		if( *(parent.begin()+i) < level){
+			for(int x = level; x > *(parent.begin()+i); x--){
+				spesa -= max[x];
+				max[x] = 0;
+			}
+		}
+
+		level = *(parent.begin()+i);
+
+//		cout << spesa << " " << level <<"\n";
+	}
+
+	for(int x = level; x >= 0; x--){
+		spesa -= max[x];
+	}
+
+
+
+
+	cout << spesa;
+
+}
+*/
+
+
+
+
+
+
+
+
+/*
+
+
+#include <iostream>
+#include <vector>
+#include <queue>
+using namespace std;
+
+
+
+struct rope{
+	int p, t;	//parent, time
+};
+
+
+int main(){
+
+	int n, max = 0, spesa = 0;
+	cin >> n;
+
+	vector<rope> whip;
+
+	for(int i = 0; i < n; i++){
+		string tmp;
+		cin >> tmp;
+		whip.push_back({stoi(tmp), 0});
+		if(stoi(tmp) > max)
+			max = stoi(tmp);
+	}
+	for(int i = 0; i < n; i++){
+		string tmp;
+		cin >> tmp;
+		whip.push_back({(*whip.begin()).p, stoi(tmp)});
+		whip.erase(whip.begin());
+		spesa += stoi(tmp);
+	}
+
+
+*
+
+	priority_queue<int> q;
+	while(whip.size() > 0){
+		int index = 0, index1 = -1, index2 = -1;
+		for(auto i:whip){
+			index++;
+//			cout<<index<<")\n";
+			if(i.p == max && index1 == -1){
+				index1 = index;
+				q.push(i.t);
+//				cout << "A\n";
+			}
+			else if(i.p == max && index1 != -1){
+				q.push(i.t);
+//				cout << "B\n";
+			}
+*
+			cout <<max <<" "<<whip.size()<<" "<< q.size()<<"\n";
+			for(auto x:whip){
+				cout << x.p << ","<<x.t<<" ";
+			}
+			cout << "\n";
+*
+			if(!q.empty() && (i.p < max || index == whip.size()) ){
+				index2 = index;
+				if(index == whip.size() && i.p == max)
+					index2++;
+				spesa -= q.top();
+				while(!q.empty()){
+					q.pop();
+				}
+				whip.erase(whip.begin() +index1 -1, whip.begin() +index2 -1);
+//				cout << "C"<<index1 <<" "<<index2<<"\n";
+				break;
+			}
+
+
+			if(index == whip.size() && index1 == -1){
+				max--;
+			}
+
+		}
+	}
+
+
+	cout << spesa;
+
+}
+
+/
+
+
+
+
+
+	priority_queue<int> q;
+	while(max > -1){
+		int index = 0;
+		for(auto i:whip){
+			index++;
+			if(i.p == max){
+				q.push(i.t);
+			}
+			if(!q.empty() && (i.p < max || index == whip.size()) ){
+				spesa -= q.top();
+				cout << q.top()<<"\n";
+				while(!q.empty()){
+					q.pop();
+				}
+			}
+		}
+
+		max--;
+	}
+
+
+	cout << spesa;
+}
+*/

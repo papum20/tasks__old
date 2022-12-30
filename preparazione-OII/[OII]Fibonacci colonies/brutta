@@ -1,0 +1,90 @@
+#include <iostream>
+#include <vector>
+#include <unordered_map>
+using namespace std;
+
+
+
+int T = 100000, N0 = 100000, N = 100000, K = 100000, tot = 0;
+struct colony{
+	int A, B, A2, B2;	//A = dimensions, B = value
+};
+vector <colony> colonies;
+
+
+
+unordered_map <int, int> fibonacci;
+
+void fibo(int k){
+	fibonacci[k] = fibonacci[k-1] + fibonacci[k-2];
+	if(fibonacci[k] < K)
+		fibo(k+1);
+}
+
+
+
+
+
+
+
+void foo(int pos)
+{
+	for(int i = 0; i < pos; i++){
+		if(colonies.at(pos).B + colonies.at(i).B2 > colonies.at(pos).B2 && colonies.at(pos).A + colonies.at(i).A2 <= K){
+			colonies.at(pos).B2 = colonies.at(pos).B + colonies.at(i).B2;
+			colonies.at(pos).A2 = colonies.at(pos).A + colonies.at(i).A2;
+		}
+	}
+	cout << colonies.at(pos).A << " " << colonies.at(pos).B << " " << colonies.at(pos).A2 << " " << colonies.at(pos).B2 << endl;
+	tot = max(tot, colonies.at(pos).B2);
+
+
+	if(pos < N-1)
+		foo(pos+1);
+}
+
+
+
+
+
+
+int main(){
+
+	cin >> T >> N0 >> K;
+
+	fibonacci[0] = 1;
+	fibonacci[1] = 1;
+	fibo(2);
+
+
+
+	for(int t = 0; t < T; t++)
+	{
+		N = N0;
+		tot = 0;
+
+		for(int n = 0; n < N0; n++){
+			int A, B;
+			cin >> A >> B;
+			colonies.push_back({fibonacci[A],B,fibonacci[A],B});
+		}
+
+
+
+		for(int i = 0; i < N0; i++){
+			for(int j = 1; j < K/fibonacci[colonies.at(i).A]; j++){
+				colonies.push_back(colonies.at(i));
+				N++;
+		}	}
+
+
+
+		foo(1);
+		cout << tot;
+
+
+		colonies.clear();
+
+	}
+
+}

@@ -1,0 +1,90 @@
+//#include <iostream>
+//#include <vector>
+//using namespace std;
+//
+//
+//
+//vector <uint64_t> C;
+//
+//bool verify(uint64_t d){
+//	for(auto i:C)
+//		if(i%d != 0) return false;
+//	return true;
+//}
+//
+//
+//
+//
+//int main(){
+//
+//	int N;
+//	cin >> N;
+//
+//	uint64_t mn;
+//	cin >> mn;
+//	C.push_back(mn);
+//	for(int i = 1; i < N; i++){
+//		uint64_t tmp;
+//		cin >> tmp;
+//		C.push_back(tmp);
+//		mn = min(mn, tmp);
+//	}
+//
+//
+//
+//	cout << "1 ";
+//	for(uint64_t i = 2; i <= mn; i++)
+//	{
+//		if(verify(i)) cout << i << " ";
+//	}
+//
+//}
+
+
+
+
+
+
+
+
+#include <iostream>
+using namespace std;
+
+
+
+uint64_t mcd(uint64_t x, uint64_t y){
+	if(y == 0) return x;
+	return mcd(y, x%y);
+}
+
+
+
+
+int main(){
+
+//	freopen("input.txt","r",stdin);
+//	freopen("output.txt","w",stdout);
+
+
+	int N;
+	cin >> N;
+
+	uint64_t MCD;
+	cin >> MCD;
+	for(int i = 1; i < N; i++){
+		uint64_t tmp;
+		cin >> tmp;
+		MCD = mcd(MCD, tmp);
+	}
+
+
+
+	int incr = (MCD%2==0)? 1:2;
+	for(uint64_t i = 1; i <= MCD/2; i+=incr)
+		if(MCD%i == 0) cout << i << " ";
+	cout << MCD;
+
+
+}
+
+

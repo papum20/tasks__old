@@ -1,0 +1,62 @@
+#include <iostream>
+#include <set>
+#include <cmath>
+#include <unordered_map>
+
+
+
+
+struct number{
+	uint64_t n;	//number
+	int e;	//exponent
+};
+set <number> primes;
+//unordered_map <uint64_t, int> exponents;
+
+
+set<uint64_t> primeNumbers(uint64_t n, uint64_t div)
+{
+	if(n==1) return;
+
+	else
+	{
+		uint64_t rad = sqrt(n);
+
+		for(uint64_t i = div; i <= rad; i+=2){
+			if(n%i == 0)
+			{
+				uint64_t tmp = n;
+				while(tmp%i == 0){
+					exponents[i]++;
+					tmp /= i;
+				}
+				primes.insert(i);
+				return primeNumbers(tmp, i+2);
+			}
+		}
+
+		exponents[n] = 1;
+		return primes.insert(n);
+	}
+
+}
+
+
+
+
+
+
+set <uint64_t> dividers;
+
+void calcDividers(uint64_t n, set<uint64_t>::iterator it)
+{
+	if(it == primes.end() ) dividers.insert(n);
+
+	else{
+		for(int i = 0; i <= exponents[*it]; i++){
+			set<uint64_t>::iterator tmp = it;
+			tmp++;
+			calcDividers(n*(pow(*it,i) ), tmp);
+		}
+	}
+}

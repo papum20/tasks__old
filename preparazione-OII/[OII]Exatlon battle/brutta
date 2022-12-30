@@ -1,0 +1,500 @@
+#include <iostream>
+#include <stack>
+using namespace std;
+
+
+int N = 1000;
+string board[100];
+
+int maxArea = 0;
+int areas[100];
+bool rows[100][100];
+int width = 2;
+
+
+
+
+void calc_Area(int column)
+{
+
+	if(areas[column] >= maxArea){
+		maxArea = areas[column];
+	}
+
+
+	stack <int> newRows;
+
+	for(int r = 0; r < N; r++)
+	{
+		if(rows[column-1][r] && rows[column][r]){
+			newRows.push(r);
+		}
+	}
+
+
+
+	if(width * newRows.size() > areas[column]){
+		areas[column] = width * newRows.size();
+		for(int i = 0; i < N; i++){
+			rows[column][i] = false;
+		}
+		while(!(newRows.empty()) ){
+			rows[column][newRows.top()] = true;
+			newRows.pop();
+		}
+		width++;
+	}
+	else
+		width = 2;
+
+
+	if(areas[column] > maxArea){
+		maxArea = areas[column];
+	}
+
+
+
+
+	if(column < N-1)
+		calc_Area(column+1);
+
+}
+
+
+
+
+
+
+int main(){
+
+	cin >> N;
+
+	for(int i = 0; i < N; i++)
+		areas[i] = 0;
+
+	for(int a = 0; a < N; a++){
+		cin >> board[a];
+		for(int b = 0; b < N; b++){
+			if(board[a][b] == 'R'){
+				areas[b]++;
+				rows[b][a] = true;
+			}
+			else
+				rows[b][a] = false;
+		}
+	}
+
+
+	maxArea = areas[0];
+
+
+
+
+	calc_Area(1);
+
+
+	for(int i = 0; i < N; i++)
+		areas[i] = 0;
+
+	int R_area = maxArea;
+	maxArea = areas[0];
+
+
+	for(int a = 0; a < N; a++){
+		for(int b = 0; b < N; b++){
+			if(board[a][b] == 'A'){
+				rows[b][a] = true;
+				areas[b]++;
+			}
+			else
+				rows[b][a] = false;
+		}
+	}
+
+
+	calc_Area(1);
+
+	if(maxArea > R_area)
+		cout << "2 " << maxArea;
+	else if(R_area > maxArea)
+		cout << "1 " << R_area;
+	else
+		cout << "0 " << R_area;
+
+
+}
+
+
+
+
+
+
+
+
+
+/*#include <iostream>
+using namespace std;
+
+
+int N, areaR = 0;
+//char grid[1000][1000];
+string grid[1000];
+
+
+
+bool row(int y, int x1, int x2, char colour){
+	for(int x = x1; x <= x2; x++){
+		if(grid[y][x] != colour)
+			return false;
+	}
+	return true;
+}
+
+
+
+int areaMax = 0;
+string compare = "";
+void countArea(int x1, int x2, char colour)
+{
+
+	if(areaMax == N*N)
+		return;
+
+	cout << " " << x1 << " " << x2 << " " << areaMax << endl;
+
+	int heigth = 0;
+	for(int y = 0; y < N; y++){
+		//if(row(y, x1, x2, colour) ){
+			/*if(x2 == 999)
+				cout<<y<<endl;*
+		if(grid[y].substr(x1, x2-x1 +1) == compare)
+			heigth++;
+		//}
+	}
+	if(heigth * (x2 - x1 +1) > areaMax)
+		areaMax = heigth * (x2 - x1 +1);
+
+
+	if(x2 +1 < N){
+		compare += colour;
+		countArea(x1, x2+1, colour);
+	}
+	else if(x1 +1 < N){
+		compare = colour;
+		countArea(x1 +1, x1 +1, colour);
+	}
+
+}
+
+
+
+
+int main(){
+
+	cin >> N;
+
+	for(int a = 0; a < N; a++){
+//		for(int b = 0; b < N; b++){
+			cin >> grid[a];//[b];
+	}//	}
+
+
+	compare += 'R';
+	countArea(0, 0, 'R');
+
+	if(areaMax > N*N /2)
+		cout << "1 " << areaMax;
+	else{
+		areaR = areaMax;
+		areaMax = 0;
+		compare = 'A';
+		countArea(0, 0, 'A');
+
+		if(areaR > areaMax)
+			cout << "1 " << areaR;
+		else if(areaMax > areaR)
+			cout << "2 " << areaMax;
+		else
+			cout << "0 " << areaR;
+	}
+
+
+}
+
+
+
+
+
+
+
+/*
+int areaMax = 0;
+void countArea(int y1, int x1, int x2, char colour)
+{
+	if(areaMax == N*N)
+		return;
+
+	cout << y1 << " " << x1 << " " << x2 << " " << areaMax << endl;
+
+	if(grid[y1][x1] == colour){
+		int heigth = 1;
+		if(y1 < N-1){
+			for(int y2 = y1+1; y2 < N; y2++){
+				if(row(y2, x1, x2, colour) )
+					heigth++;
+		}	}
+		if(heigth * (x2-x1 +1) > areaMax)
+			areaMax = heigth * (x2-x1 +1);
+	}
+
+
+
+	if(grid[y1][x1] == colour && grid[y1][x2 +1] == colour && x2 +1 < N)
+		countArea(y1, x1, x2 +1, colour);
+	else if(x1 < N-1){
+		cout << x1 << endl;
+		countArea(y1, x1 +1, x1 +1, colour);
+		}
+	else if(y1 < N-1)
+		countArea(y1 +1, 0, 0, colour);
+
+
+}
+*/
+
+
+/*
+//int width = 1, height = 1;
+int areaMax = 0;
+void countArea(int y1, int x1, int x2, char colour)
+{
+	cout << y1 << " " << x1 << " " << x2 << " " << areaMax << endl;
+	if(grid[y1][x1] == colour){
+//		while(x2 < N && grid[y1][x2 +1] == colour)
+//		{
+			int heigth = 1;
+			if(y1 < N-1){
+				for(int y2 = y1+1; y2 < N; y2++){
+					if(row(y2, x1, x2, colour) )
+						heigth++;
+			}	}
+			if(heigth * (x2-x1 +1) > areaMax)
+				areaMax = heigth * (x2-x1 +1);
+
+//			if(x2 < N -1)
+//			while(x2 < N -1 && grid[y1][x2 +1] == colour)
+			if(x1 == x2){
+				for(int x = x1 +1; x < N; x++){
+					if(grid[y1][x2 +1] != colour)
+						break;
+					countArea(y1, x1, x, colour);
+				}
+			}
+//		}
+	}
+
+	if(x1 == x2){
+		if(x1 < N-1){
+			cout << x1 << endl;
+			countArea(y1, x1 +1, x1 +1, colour);
+		}
+		else if(y1 < N-1)
+			countArea(y1 +1, 0, 0, colour);
+	}
+
+
+}
+*/
+
+
+
+
+
+
+
+/*
+#include <iostream>
+#include <vector>
+#include <set>
+using namespace std;
+
+
+struct column{
+	int x, c;	//coord. x, count
+};
+
+
+bool yes(string s, int l){
+	char c = s[0];
+	for(int i = 0; i < l; i++){
+		if(s[i] != c)
+		return 0;
+	}
+	return 1;
+}
+
+
+/*
+int countVertical(string arr[], int len, int x, char elem){
+	int count = 0;
+	for(int y = 0; y < len; y++){	//lines
+		if(arr[y][x] == elem){
+			count++;
+	}	}
+	return count;
+}
+
+
+int countArea(string arr[], int len, int s_x, int s_c, char lett){	//vertical
+	int width = 1;
+	bool stop = 0;
+	if(s_x != 0){
+		for(int x = s_x-1; x >= 0; x--){	//count width on the left
+			if(stop)
+				break;
+			for(int l = 0; l < len; l++){	//lines
+				if(arr[l][s_x] != lett)
+					continue;
+				if(arr[l][x] != lett){
+					stop = 1;
+					break;
+				}
+			}
+			if(!stop)
+				width++;
+	}	}
+	stop = 0;
+
+	if(s_x != len-1){
+		for(int x = s_x+1; x < len; x++){	//count width on the right
+			if(stop)
+				break;
+			for(int l = 0; l < len; l++){	//lines
+				if(arr[l][s_x] != lett)
+					continue;
+				if(arr[l][x] != lett){
+					stop = 1;
+					break;
+				}
+			}
+			if(!stop)
+				width++;
+	}	}
+	return s_c*width;
+}
+*
+
+
+int countArea(){
+
+}
+
+
+
+int main(){
+
+	int n, area_famous = 0, area_warriors = 0, count = 0;
+	cin >> n;
+
+	string grid[n];
+	for(int i = 0; i < n; i++){
+			cin >> grid[i];
+			if(grid[i] == grid[0])
+				count++;
+	}
+
+
+
+	if(count == n){	//monochromatic
+		if(yes(grid[0], n)){
+			if(grid[0][0] == 'R')
+				area_famous = n*n;
+			else
+				area_warriors = n*n;
+	}	}
+
+
+	else{
+
+		for(int t = 0; t < 2; t++){	//teams
+			char letter = (t == 0)? 'R':'A';
+			int team_area = 0;
+			auto grow = [](const column first, const column second){
+				return first.c > second.c;
+			};
+			auto vertical = multiset<column, decltype(grow)>(grow);
+			for(int x = 0; x < n; x++){
+				vertical.insert({x, countVertical(grid, n, x, letter)});
+			}
+/*			if(t == 0){	//monochromatic
+				bool r = 0, b = 0;
+				for(auto i:vertical){
+					if(i.c == n)
+						r = 1;
+					if(i.c == 0)
+						b = 1;
+					if(r && b)
+						break;
+				}
+				if(r && !b){
+					area_famous = n*n;
+					break;
+				}
+				if(!r && b){
+					area_warriors = n*n;
+					break;
+				}
+			}	*
+
+
+			for(auto h:vertical){	//column/height
+				if(h.c == 0)
+					continue;
+				int tmp_area = countArea(grid, n, h.x, h.c, letter);
+				if(tmp_area > team_area){
+					team_area = tmp_area;
+				}
+			}
+
+
+			if(t == 0){
+				area_famous = team_area;
+				if(area_famous > n*n/2)
+					break;
+			}
+			else
+				area_warriors = team_area;
+		}
+
+	}
+
+
+
+
+	int winner;
+	if(area_famous > area_warriors)
+		winner = 1;
+	else if(area_famous < area_warriors)
+		winner = 2;
+	else
+		winner = 0;
+	cout << winner << " " << ((area_famous > area_warriors)? area_famous:area_warriors);
+
+
+
+
+/*
+
+	for(int a = 0; a < n; a++){	//print
+		for(int b = 0; b < n; b++){
+			cout << grid[a][b] << ((b == n-1)?"\n":" ");
+	}	}
+	for(auto i:vertical){
+		cout << i.x << " " << i.c << "\n";
+	}
+*
+
+}
+
+*/
+

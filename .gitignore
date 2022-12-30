@@ -1,0 +1,9 @@
+# metadata
+.metadata
+./*/.metadata
+
+# eclipse useless files
+*.settings/
+*Debug/
+*.project
+*.cproject

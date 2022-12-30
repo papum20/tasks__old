@@ -1,0 +1,191 @@
+#include <iostream>
+using namespace std;
+
+
+
+
+
+//fare due tabelle, una per persona, ognuna grande N**2, come i modi di scegliere start e end, e riempirla a partire dai piu piccoli
+
+int mx;
+
+void ricorsiva(int per, int V[], int start, int end, int cM, int cP)	//person
+{
+	int tmp1, tmp2;
+	ricorsiva((per+1)%2, V, start+1, end, (per==0)? (cM+V[start]):cM, (per==1)? (cP+V[start]):cP);
+}
+
+
+
+
+int contentezza(int N, int V[])
+{
+	ricorsiva(0, V, 0, N, 0, 0);
+	return mx;
+}
+
+
+
+
+
+
+
+
+//int contentezza(int N, int V[])
+//{
+//	int start = 0, end = N;
+//	int c = 0;	//contentezza monica
+//	int turn = 0;	//0: monica's turn, 1 paola
+//	while(start < end)
+//	{
+//		if(end-start == 2){
+//			if(turn == 0) c += max(V[start],V[start+1]);
+//			else c += min(V[start],V[start+1]);
+//			break;
+//		}
+//		else if(end-start == 3){
+//			if(V[start] > V[end-1]){
+//				if(turn == 0) c += V[start];
+//				start++;
+//			}
+//			else{
+//				if(turn == 0) c += V[end-1];
+//				end--;
+//			}
+//			if(turn == 0) c += min(V[start],V[start+1]);
+//			else c += max(V[start],V[start+1]);
+//			break;
+//		}
+//
+//		else{
+//			if(V[start+1]-V[start] < V[end-2]-V[end-1]){
+//				if(turn == 0) c += V[start];
+//				start++;
+//			}
+//			else{
+//				if(turn == 0) c += V[end-1];
+//				end--;
+//			}
+//		}
+//
+//
+//		turn = (turn+1)%2;
+//	}
+//
+//
+//
+//	return c;
+//
+//
+//}
+
+
+
+
+
+
+int main(){
+
+	int N;
+	cin >> N;
+	int V[N];
+	for(int i = 0; i < N; i++) cin >> V[i];
+
+	cout << contentezza(N, V);
+
+}
+
+
+
+
+
+
+
+
+
+
+#include <iostream>
+#include <unordered_map>
+#include <vector>
+using namespace std;
+
+
+
+
+
+//fare due tabelle, una per persona, ognuna grande N**2, come i modi di scegliere start e end, e riempirla a partire dai piu piccoli
+
+
+struct piece{
+	int s, e;	//start, end
+};
+
+
+
+int contentezza(int N, int V[])
+{
+	int mx = 0;
+	unordered_map <int, piece> pieces;
+	unordered_map <int, int> c[2];
+
+	int turn = N%2;
+	int tolti = 0;
+
+	for(int l = 1; l <= N; l++)	//length
+	{
+		bool maximum = (l%2 == turn);
+
+		if(l == 1){
+			for(int i = 0; i < N; i++){
+				c[l%2][i] = V[i];
+				pieces[i].s = i;
+				pieces[i].e = i+1;
+				if(maximum) mx = max(mx, V[i]);
+				cout << mx<<endl;
+			}
+		}
+
+		if(l == 2){
+			for(int i = 0; i < N; i++){
+				if(pieces[i].e >= N || (pieces[i].s-1 > 0 && V[pieces[i].s-1] >= V[pieces[i].e]) )
+				{
+					c[l%2][i] = V[pieces[i].s-1];
+					pieces[i].s--;
+				}
+				else{
+					c[l%2][i] = V[pieces[i].e];
+					pieces[i].e++;
+				}
+
+				if(maximum) mx = max(mx, c[l%2][i]);
+				cout << l<<": "<<mx<<endl;
+			}
+		}
+
+		else{
+			for(int i = 0; i < N-tolti; i++)
+			{
+				if(pieces[i].e >= N || (pieces[i].s-1 > 0 && V[pieces[i].s-1] >= V[pieces[i].e]) ){
+					c[l%2][i] += V[pieces[i].s-1];
+					pieces[i].s--;
+				}
+				else{
+					c[l%2][i] += V[pieces[i].e];
+					pieces[i].e++;
+				}
+
+				if(maximum) mx = max(mx, c[l%2][i]);
+				cout << l<<": "<<mx<<endl;
+			}
+		}
+
+
+	}
+
+
+	return mx;
+}
+
+
+
+

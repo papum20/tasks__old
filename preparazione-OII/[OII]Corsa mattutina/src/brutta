@@ -1,0 +1,90 @@
+#include <iostream>
+#include <unordered_map>
+#include <vector>
+#include <set>
+using namespace std;
+
+
+
+
+struct road{
+	int to, len;
+};
+
+
+
+
+
+set <int> passed;
+long long mn = 0;
+
+void jogging(int start, unordered_map<int, vector<road>> r, int pos, long long tot)
+{
+	cout << pos <<" "<< tot <<  " " <<passed.size()<<endl;
+	if(tot > mn)
+		return;
+
+	else if(passed.size() > 1 && pos == start){
+			mn = min(mn, tot);
+			cout <<"MMM"<<mn<<endl;
+	}
+
+	else{
+		for(auto i:r[pos])
+	{
+//		cout << i.to <<endl;
+		if(i.to == start && passed.size() > 2)
+			jogging(start, r, i.to, tot+i.len);
+		else if(passed.find(i.to) == passed.end() ){
+			passed.insert(i.to);
+//			cout << i.to << tot << endl;
+			jogging(start, r, i.to, tot+i.len);
+			passed.erase(i.to);
+		}
+	}
+	}
+}
+
+
+
+
+
+
+
+int main(){
+
+//	freopen("input.txt","r",stdin);
+//	freopen("output.txt","w",stdout);
+
+
+
+	int N, M;
+	cin >> N >> M;
+
+
+	unordered_map <int, vector<road> > roads;
+
+	for(int i = 0; i < M; i++){
+		int tmpF, tmpT, tmpL;
+		cin >> tmpF >> tmpT >> tmpL;
+		roads[tmpF].push_back({tmpT,tmpL});
+		roads[tmpT].push_back({tmpF,tmpL});
+		mn += tmpL;
+	}
+
+
+
+
+	for(int i = 1; i <= N; i++)
+	{
+		passed.insert(i);
+		jogging(i, roads, i, 0);
+		passed.erase(i);
+	}
+
+
+
+	cout << mn;
+
+
+}

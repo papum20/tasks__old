@@ -1,0 +1,139 @@
+#include <iostream>
+#include <unordered_map>
+using namespace std;
+
+
+
+int C, D, Y;	//cost, duration, years
+unordered_map <int, int> M;
+unordered_map <int, int> P;
+
+
+int64_t tot = 0, mn = 0;
+int iMn = 1;	//index max
+
+
+int foo(int y)
+{
+//	cout<<P[0]<<" ";
+//	cout <<"Y: "<<y<<endl<<endl;
+	if(y == 0) return 0;
+
+
+	mn = M[0] - P[0];
+	tot = M[0];
+	iMn = 1;
+
+
+//	cout << "tot: "<<tot<<" "<<P[1]<<" "<<tot-P[1]<<" "<<tot-P[1] + C*(Y/(1+1))<<" "<<mn<<" "<<iMn<<" "<<mn + C*(Y/iMn)<<endl;
+
+	for(int i = 1; i < min(D, y); i++){
+		tot += M[i];
+//		cout << "tot: "<<tot<<" "<<P[i]<<" "<<tot-P[i]<<" "<<tot-P[i] + C*(Y/(i+1))<<" "<<mn<<" "<<iMn<<" "<<mn + C*(Y/iMn)<<endl;
+		if( (tot-P[i] + C)*(Y/(i+1)) <= (mn + C)*(Y/iMn) ){
+			mn = tot-P[i];
+			iMn = i+1;
+			cout << mn << " "<<iMn<<endl;;
+		}
+	}
+
+	cout << y << ": " << (mn+C)*(y/iMn)<<" "<<iMn<<endl;
+
+	return (mn+C)*(y/iMn) + foo(y%iMn);
+}
+
+
+
+
+int main(){
+
+	cin >> C >> D >> Y;
+
+	for(int i = 0; i < D; i++){
+		int tmp;
+		cin >> tmp;
+		M[i] = tmp;
+	}
+	for(int i = 0; i < D; i++){
+		int tmp;
+		cin >> tmp;
+		P[i] = tmp;
+//		cout << tmp << P[i]<<endl;
+	}
+//	cout << P[0];
+
+
+
+	cout << foo(Y);
+
+}
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+#include <iostream>
+#include <unordered_map>
+using namespace std;
+
+
+
+int C, D, Y;	//cost, duration, years
+unordered_map <int, int> M;
+unordered_map <int, int> P;
+
+
+int64_t best = 9223372036854775807;
+
+
+void foo(int y, int64_t spesa, int64_t tot, int pos)
+{
+	cout << y << ": " << spesa << " " << tot << " " << pos <<endl;
+//	cout<<P[0]<<" ";
+//	cout <<"Y: "<<y<<endl<<endl;
+	if(y == 0) best = min(best, spesa);
+
+	else{
+		cout << pos+1<<"<"<<tot<<"::  ";
+		foo(y%(pos+1), spesa + (tot+C-P[pos])*(y/(pos+1)), M[0], 0);
+		cout << ">"<<endl;
+		if(pos+1 < y && pos+1 < D) foo(y, spesa, tot+M[pos+1], pos+1);
+	}
+
+
+
+
+
+int main(){
+
+	cin >> C >> D >> Y;
+
+	for(int i = 0; i < D; i++){
+		int tmp;
+		cin >> tmp;
+		M[i] = tmp;
+	}
+	for(int i = 0; i < D; i++){
+		int tmp;
+		cin >> tmp;
+		P[i] = tmp;
+//		cout << tmp << P[i]<<endl;
+	}
+//	cout << P[0];
+
+
+
+	foo(Y, 0, M[0], 0);
+	cout << best;
+
+}

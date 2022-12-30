@@ -1,0 +1,235 @@
+#include <iostream>
+#include <vector>
+#include <unordered_map>
+#include <set>
+#include <cmath>
+using namespace std;
+
+
+
+uint64_t mcd(uint64_t x, uint64_t y){
+	if(y == 0) return x;
+	return mcd(y, x%y);
+}
+
+
+
+set <uint64_t> res;
+vector <uint64_t> dividers;	//(prime)
+vector <int> prime;
+
+bool primeN(int n, int rad){
+	for(int i = 0; prime[i] <= rad; i++)
+		if(n%prime[i] == 0) return false;
+	return true;
+}
+
+
+
+int len = dividers.size();
+
+void bin(int pos, uint64_t tot)
+{
+	res.insert(tot);
+
+	if(pos < len){
+		for(int i = pos; i < len; i++)
+			bin(i+1, tot*dividers[i]);
+	}
+}
+
+
+
+
+
+int main(){
+
+//	freopen("input.txt","r",stdin);
+//	freopen("output.txt","w",stdout);
+
+
+	int N;
+	cin >> N;
+
+	uint64_t MCD;
+	cin >> MCD;
+	for(int i = 1; i < N; i++){
+		uint64_t tmp;
+		cin >> tmp;
+		MCD = mcd(MCD, tmp);
+	}
+
+
+
+
+	uint64_t rad = sqrt(MCD);
+	prime.push_back(2);
+	if(MCD%2 == 0) dividers.push_back(2);
+
+	for(int i = 3; i < rad; i+=2){
+		if(primeN(i,sqrt(i))){
+			prime.push_back(i);
+			if(MCD%i == 0) dividers.push_back(i);
+		}
+	}
+
+
+
+	bin(0, 1);
+	for(auto i:res) cout << i << " ";
+
+
+
+
+//	for(int i = 1; i <= MCD/2; i++)
+//		if(MCD%i == 0) cout << i << " ";
+//	cout << MCD;
+
+
+}
+
+
+
+
+
+
+
+//#include <iostream>
+//#include <set>
+//#include <vector>
+//#include <unordered_map>
+//#include <cmath>
+//using namespace std;
+//
+//
+//
+//
+//vector <uint64_t> dividers;	//(prime)
+//vector <int> prime;
+//
+//bool primeN(int n, int rad){
+//	for(int i = 0; prime[i] <= rad; i++)
+//		if(n%prime[i] == 0) return false;
+//	return true;
+//}
+//
+//
+//
+//
+//
+//set <uint64_t> res;
+//
+//unordered_map <int, bool> bin;
+//void binary(int pos)
+//{
+//	for(int i = 0; i < dividers.size(); i++) cout << bin[i];
+//	cout << endl;
+//	int tot = 1;
+//	for(int i = 0; i < dividers.size(); i++)
+//		if(bin[i]) tot *= dividers[i];
+//	res.insert(tot);
+//	cout << tot <<endl;
+//
+//	if(pos < dividers.size()){
+//		for(int i = pos; i < dividers.size(); i++){
+//			bin[pos] = true;
+//			binary(pos+1);
+//			bin[pos] = false;
+//		}
+//	}
+//}
+//
+//
+//
+//
+//
+//
+//
+//int main(){
+//
+//	int N;
+//	cin >> N;
+//
+//	unordered_map <int, uint64_t> C;
+//	uint64_t mn;
+//	cin >> mn;
+//	C[0] = mn;
+//	for(int i = 1; i < N; i++){
+//		uint64_t tmp;
+//		cin >> tmp;
+//		C[i] = tmp;
+//		mn = min(mn, tmp);
+//	}
+//
+//
+//
+//
+//
+//	prime.push_back(2);
+//	if(mn%2 == 0) dividers.push_back(2);
+//
+//	for(int i = 3; i <= mn/2; i++)
+//	{
+//		if(primeN(i, sqrt(i)) ){
+//			prime.push_back(i);
+//			if(mn%i == 0) dividers.push_back(i);
+//		}
+//	}
+//
+//	for(auto i:dividers) cout << i << " ";
+//	cout << endl;
+//
+//
+//
+//
+//	for(int i = 1; i < N; i++){
+//		for(int j = dividers.size()-1; j >= 0; j--)
+//			if(C[i]%dividers[j] != 0) dividers.erase(dividers.begin()+j);
+//	}
+//
+//
+//
+//
+//
+//
+//	res.insert(1);
+//	binary(0);
+//
+//	for(auto i:res) cout << i << " ";
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+////	for(uint64_t i = 2; i <= first/2; i++)
+////		if(first%i == 0) dividers.insert(i);
+////
+////
+////
+////	set <uint64_t> res;
+////	res.insert(1);
+////	unordered_map <uint64_t, bool> unusable;
+////
+////	std::set <uint64_t>::iterator it = C.begin();
+////	it++;
+////	for(int i = 1; i < N; i++){
+////		for(auto j:dividers)
+////			if(!unusable[j] && *it%j != 0) unusable[j] = true;
+////		it++;
+////	}
+////
+////
+////
+////	cout << "1 ";
+////	for(auto i:dividers)
+////		if(!unusable[i]) cout << i << " ";
+//
+//}

@@ -1,0 +1,182 @@
+#include <iostream>
+#include <set>
+#include <unordered_map>
+#include <vector>
+#include <algorithm>
+using namespace std;
+
+
+
+int tot = 0;
+unordered_map <int, vector<int> > quotes;
+set <int> quoted;
+set <int> used;
+set <int> okk;
+
+
+
+bool ok = false;
+
+//void ricorsiva(int N, int pos){
+////	for(auto j:used) cout << j << " ";
+////	cout << endl;
+//	for(auto i:quotes[pos]){
+////		cout<<endl << i << (used.find(i) == used.end())<<endl;
+//		if(ok) return;
+//		if(used.find(i) == used.end()){
+//			used.insert(i);
+//			ricorsiva(N, i);
+//		}
+//	}
+//	if(!ok && used.size() == N){
+//		tot++;
+//		ok = true;
+//	}
+//}
+
+
+
+void ricorsiva(int N, int pos){
+	for(auto i:quotes[pos]){
+		if(okk.find(i) != okk.end() ){
+			tot++;
+			ok = true;
+			okk.insert(N);
+			return;
+		}
+		quoted.insert(i);
+	}
+
+	for(auto i:quotes[pos]){
+		if(ok) return;
+		if(used.find(i) == used.end()){
+			used.insert(i);
+			ricorsiva(N, i);
+		}
+	}
+
+	if(!ok && quoted.size() == N){
+		tot++;
+		okk.insert(N);
+		ok = true;
+	}
+}
+
+
+
+
+int paper(int N, int M, int A[], int B[])
+{
+	for(int i = 0; i < N; i++) quotes[A[i]].push_back(B[i]);
+//	for(int i = 1; i <= N; i++){
+//		cout << i <<": ";
+//		for(auto j:quotes[i]) cout << j << " ";
+//		cout << endl;
+//	}
+
+	for(int i = 1; i <= N; i++){
+//		cout << i <<": ";
+		ok = false;
+		quoted.clear();
+		used.clear();
+		quoted.insert(i);
+		used.insert(i);
+		ricorsiva(N, i);
+	}
+
+	return tot;
+
+}
+
+
+
+
+
+
+//int tot = 0;
+//struct quote{
+//	int a, b;	//a quotes b
+//};
+//auto byA = [](const quote &a, const quote &b){
+//	return a.a < b.a;
+//};
+//vector <quote> order;
+//unordered_map <int, set<int> > quotes;
+//set <int> quoted;
+//
+//int paper(int N, int M, int A[], int B[])
+//{
+//	for(int m = 0; m < M; m++) order.push_back({A[m],B[m]});
+//
+//	sort(order.begin(),order.end(),byA);
+//	int ind = 0;
+//
+//	for(int n = 1; n <= N; n++)
+//	{
+//		bool index = false;
+//		for(int i = ind; i < M; i++){
+//			if(order[i].a == n){
+//				index = true;
+//				ind = i;
+//			}
+//		}
+//		if(!index) continue;
+//
+//
+//		quoted.clear();
+//		quoted.insert(n);
+//
+//		for(int i = ind; i < M; i++)
+//			if(quoted.find(order[i].a) != quoted.end() ) quoted.insert(order[i].b);
+//		for(int i = 0; i < ind; i++)
+//			if(quoted.find(order[i].a) != quoted.end() ) quoted.insert(order[i].b);
+//
+//		if(quoted.size() == N) tot++;
+//
+//	}
+//
+//
+////	for(int i = 0; i < N; i++) quotes[A[i]].push_back(B[i]);
+//////	for(int i = 1; i <= N; i++){
+//////		cout << i <<": ";
+//////		for(auto j:quotes[i]) cout << j << " ";
+//////		cout << endl;
+//////	}
+////
+////	for(int i = 1; i <= N; i++){
+//////		cout << i <<": ";
+////		ok = false;
+////		quoted.clear();
+////		used.clear();
+////		quoted.insert(i);
+////		used.insert(i);
+////		ricorsiva(N, i);
+////	}
+//
+//	return tot;
+//
+//}
+
+
+
+
+
+
+
+int main(){
+
+	int N, M;
+	cin >> N >> M;
+
+	int A[M], B[M];
+	for(int i = 0; i < M; i++){
+		cin >> A[i];
+		cin >> B[i];
+	}
+
+
+
+
+	cout << paper(N, M, A, B);
+
+}

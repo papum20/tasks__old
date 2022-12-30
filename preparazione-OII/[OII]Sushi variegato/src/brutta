@@ -1,0 +1,239 @@
+/*
+bool inString(char elem, string s){
+	for(int i = 0; i < s.length(); i++)
+		if(s[i] == elem)
+			return false;
+	return true;
+}
+*/
+
+/*
+bool inVector(vector<int> v, int elem){
+	for(auto i:v)
+		if(i == elem)
+			return true;
+	return false;
+}
+*/
+
+
+//int taglia(int N, int V[])
+//{
+//	vector <int> permutations(1, 0);	//indice inizio ultimo piece
+//	int tot = 0;
+//
+//
+//	for(int i = 1; i < N; i++)
+//	{
+//		bool done = false;
+////		cout << "i: " << i << endl;
+//		for(int v = 0; v < permutations.size(); v++){
+////			cout << "v: " << v << endl;
+//
+//			bool present = false;
+//			for(int j = permutations.at(v); j < i; j++){
+////				cout << "j: " << j << " 	" << V[j] << " " << V[i] <<endl;
+//				if(V[j] == V[i]){
+//					present = true;
+//					break;
+//				}
+//			}
+////			cout << "present: " << present << endl;
+//
+//			if(v == 0){
+//				tot += tot;
+//				permutations.insert(permutations.begin(), i);
+//				v++;
+//			}
+//
+//			if(present){
+//				permutations.erase(permutations.begin()+v);
+//				tot++;
+//				if(!done){
+//					tot--;
+//					done = true;
+//				}
+//				v--;
+//			}
+//		}
+//			cout << "i: "<<i<<" - ";
+//			for(auto x:permutations)
+//				cout << x << " ";
+//			cout << endl;
+//			cout<<"tot: "<<tot<<endl;
+//
+//	}
+//
+//
+//
+//
+//
+//	return tot + permutations.size();
+//
+//}
+
+
+
+
+
+
+/*
+int taglia(int N, int V[])
+{
+	vector <string> permutations(1, "0");	//1 = spazio prima, 0 = no spazio prima
+
+
+	for(int i = 1; i < N; i++)
+	{
+//		cout << "i: " << i << endl;
+		for(int v = 0; v < permutations.size(); v++){
+//			cout << "v: " << v << endl;
+
+			bool present = false;
+			for(int j = i-1; j >= 0; j--){
+//				cout << "j: " << j << " 	" << V[j] << " " << V[i] <<endl;
+				if(V[j] == V[i]){
+					present = true;
+					break;
+				}
+				if( (permutations.at(v))[j] == '1')
+					break;
+			}
+//			cout << "present: " << present << endl;
+
+			permutations.insert(permutations.begin()+v +1, permutations.at(v)+"1");
+			if(!present)
+				permutations.insert(permutations.begin()+v +1, permutations.at(v)+"0");
+			permutations.erase(permutations.begin()+v);
+			if(!present)
+				v++;
+
+/*			for(auto x:permutations)
+				cout << x << " ";
+			cout << endl;	*
+		}
+	}
+
+
+
+
+
+	return permutations.size();
+
+}
+*/
+
+
+/*
+int taglia(int N, int V[])
+{
+
+	uint64_t tot = 1;
+	vector <int> sol;
+	set <int> different;
+
+	different.insert(V[0]);
+
+
+
+	int i = 0, j = 1, tmp_tot = 1;
+
+	while(i < N)
+	{
+		if(j == N || different.find(V[j]) != different.end() ){
+
+		}
+		else if(different.find(V[j]) != different.end() ){
+			different.insert(V[j]);
+			tmp_tot++;
+		}
+	}
+
+
+
+	return tot;
+
+}
+
+*/
+
+
+
+
+
+
+//set <int> striscia;
+//uint64_t tot = 0;
+//
+//void foo(int n, int v[], int start, int pos)
+//{
+//	if(pos == n){
+//		tot++;
+//		if(tot == 1000000007) tot = 0;
+////		cout << endl;
+//		return;
+//	}
+//
+//	//non tagli
+//
+//	else if(striscia.find(v[pos]) == striscia.end() ){
+//		striscia.insert(v[pos]);
+//		foo(n, v, start, pos+1);
+//		striscia.erase(v[pos]);
+//	}
+//
+//	//tagli
+//
+//	striscia.clear();
+//	striscia.insert(v[pos]);
+////	cout << pos << "  ";
+//	foo(n, v, pos, pos+1);
+//	striscia.erase(v[pos]);
+//	for(int i = start; i < pos; i++)
+//		striscia.insert(v[i]);
+//
+//}
+
+
+//int taglia(int n, int v[])
+//{
+//	striscia.insert(v[0]);
+//	foo(n, v, 0, 1);
+//	return tot;
+//}
+
+
+
+
+
+
+//struct striscia{
+//	int q;	//quantità
+//	set <int> s;	//striscia sushi
+//};
+
+//auto byQ = [](const striscia &a, const striscia &b){
+//	return a.q > b.q;
+//};
+
+//auto sushi = multiset <striscia, decltype(byQ)> (byQ);
+
+//vector <striscia> sushi;
+
+
+
+
+
+//int taglia(int n, int v[])
+//{
+//	int tot = 0;
+//
+//
+//	sushi.push_back({1});
+//	sushi[0].s.insert(v[0]);
+//
+//	for(auto i:(sushi[0]) )
+//		cout << i;
+//
+//	return tot;
+//}

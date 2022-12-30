@@ -1,0 +1,543 @@
+//#include <iostream>
+//#include <unordered_map>
+//using namespace std;
+//
+//
+//
+//int N, len_min = 100000;
+//char mapp[100][100];
+//struct coord{
+//	int x, y;
+//};
+//coord directions[8] = { {1,0},{1,1},{0,1},{-1,1},{-1,0},{-1,-1},{0,-1},{1,-1} };
+//unordered_map <int, unordered_map<int,int> > mn;
+//
+//
+//
+//void path(int x, int y, int len)
+//{
+//	for(int a = 0; a < N; a++){
+//		for(int b = 0; b < N; b++){
+//			cout << mapp[a][b];
+//	}cout<<"\n";	}cout << "\n";
+//
+//	if(x == N-1 && y == N-1){
+////		cout<<"AAA";
+//		len_min = min(len, len_min);
+//	}
+//
+//	else{
+////		cout << "BBB";
+//		for(int i = 0; i < 8; i++)
+//		{
+//			int x1 = x + directions[i].x, y1 = y + directions[i].y;
+//			if( (mn[y1][x1] != 0 && mn[y1][x1] <= len) || ((y1 < 0 || y1 >= N) || (x1 < 0 || x1 >= N)) || mapp[y1][x1] != '*')// == 'x'/* || mapp[y1][x1] == '+'*/)
+//				continue;
+//
+//			mapp[y][x] = 'x';
+//			mn[y1][x1] = min(mn[y1][x1], len);
+//			path(x1, y1, len +1);
+//			mapp[y][x] = '*';
+//		}
+//	}
+//
+//}
+//
+//
+//
+//
+//
+//int main(){
+//
+//	freopen("output.txt","w",stdout);
+//
+//	cin >> N;
+//
+//	for(int a = 0; a < N; a++){
+//		for(int b = 0; b < N; b++){
+//			cin >> mapp[a][b];
+//	}	}
+//
+//
+//
+//	mn[0][0] = 0;
+//	path(0, 0, 1);
+//	cout << len_min;
+//
+//
+//}
+
+
+
+
+
+
+
+
+#include <iostream>
+#include <unordered_map>
+using namespace std;
+
+
+int n;
+char mapp[100][100];
+int length = 10000;
+struct coord{
+	int y, x;
+};
+coord directions[8] = { {0,1},{1,1},{1,0},{1,-1},{0,-1},{-1,-1},{-1,0},{-1,1} };
+string admitted[57] = {
+	"11000000","01100000","00110000","00011000","00001100","00000110","00000011","10000001",	//2
+	"10100000","00101000","00001010","10000010",
+	"11100000","01110000","00111000","00011100","00001110","00000111","10000011","11000001",	//3
+	"01101000","00011010","10000110","10100001",
+	"10110000","00101100","00001011","11000010",
+	"11110000","01111000","00111100","00011110","00001111","10000111","11000011","11100001",	//4
+	"11101000","00111010","10001110","10100011",
+	"10111000","00101110","10001011","11100010",
+	"10101010",
+	"11111000","00111110","10001111","11100011",	//5
+	"11101010","10111010","10101110","10101011",
+	"11111010","10111110","10101111","11101011",	//6
+};
+int n_admitted[6] = {0,12,28,45,53,57};
+unordered_map <int, unordered_map<int,int> > mn;
+
+
+
+bool changed = true;
+//coord around[8];
+int len = 0;	//around
+void ban(){
+	for(int a = 0; a < n; a++){	//
+		for(int b = 0; b < n; b++){
+			cout<<mapp[a][b];
+		}
+		cout << "\n";
+	}
+	cout <<endl;
+	if(changed == true){
+		changed = false;
+
+		for(int y = 0; y < n; y++){
+			for(int x = 0; x < n; x++){
+				if( mapp[y][x] != '*' || (y == 0 && x == 0) || (y == n-1 && x == n-1) )
+					continue;
+
+				string around = "";
+				len = 0;
+				for(int i = 0; i < 8; i++){	//around
+					int y1 = y+directions[i].y, x1 = x+directions[i].x;
+//					if(mapp[y1][x1] == '*' || mapp[y1][x1] == '1'){
+					if( (y1 < 0 || x1 < 0 || y1 >= n || x1 >= n) || (mapp[y1][x1] != '*' && mapp[y1][x1] != '1') )
+						around += "0";
+					else{
+						around += "1";
+						len++;
+					}
+				}
+
+//				cout << "yx: "<<y<<x <<" " <<around<<" " <<len<<endl;	//
+				if(len == 0)
+					mapp[y][x] = 'x';
+				else if(len == 1){
+					mapp[y][x] = 'x';
+					changed = true;
+				}
+				else if(len <= 6){
+					for(int i = n_admitted[len-2]; i < n_admitted[len-1]; i++){
+						if(around == admitted[i]){
+							mapp[y][x] = 'x';
+							changed = true;
+							break;
+				}	}	}
+
+
+		}	}
+
+
+		ban();
+	}
+}
+
+
+
+
+void aCaso(int y, int x, int pos){
+	for(int a = 0; a < n; a++){	//
+		for(int b = 0; b < n; b++){
+			cout<<mapp[a][b];
+		}
+		cout << "\n";
+	}
+	cout << endl;
+
+	if(y == n-1 && x == n-1){
+		length = min(pos, length);
+	}
+
+	else{
+		if(pos < length){
+			for(int i = 0; i < 8; i++){
+				int y1 = y+directions[i].y, x1 = x+directions[i].x;
+				if(pos >= length) break;
+				if( (mn[y1][x1] != 0 && mn[y1][x1] <= len) || y1 < 0 || y1 >= n || x1 < 0 || x1 >= n) continue;
+				if(mapp[y1][x1] == '*'){
+					mapp[y1][x1] = '1';
+					mn[y1][x1] = min(mn[y1][x1], len);
+					aCaso(y1,x1, pos+1);
+					mapp[y1][x1] = '*';
+				}
+			}
+	}	}
+}
+
+
+
+
+int main(){
+
+//	freopen("input.txt","r",stdin);
+	freopen("output.txt","w",stdout);
+
+
+	cin >> n;
+	for(int a = 0; a < n; a++){
+		for(int b = 0; b < n; b++){
+			cin >> mapp[a][b];
+	}	}
+	mapp[0][0] = '1';
+
+
+
+	mn[0][0] = 0;
+	ban();
+	aCaso(0,0,1);
+
+	cout << length;
+
+}
+
+
+
+
+
+
+
+
+
+
+/*
+#include <iostream>
+//#include <vector>
+using namespace std;
+
+
+int n;//, ind = 0;
+bool changed = true;
+char mapp[100][100];
+bool path[100][100];
+struct coord{
+	int y, x;
+};
+coord directions[8] = { {0,1},{1,1},{1,0},{1,-1},{0,-1},{-1,-1},{-1,0},{-1,1} };
+//bool ban[100][100];
+/*auto degrow = [](const int& k1, const int& k2){
+	return k1 > k2;
+};
+auto already = map<int,string,decltype(degrow)>(degrow);*
+int length = 100*100;
+
+
+
+bool linked = false;
+coord around[8];
+int ind = 0;
+//bool used[8];
+//coord permutation[8];
+
+void link(int pos){
+	if(!linked){
+		if(pos == ind){
+			linked = true;
+			for(int i = 0; i < ind-1; i++){
+				if(!(abs(around[i].x-around[i+1].x < 2 && around[i].y-around[i+1].y < 2)) ){
+					linked = false;
+					break;
+				}
+			}
+		}
+
+/*		for(int i = 0; i < ind; i++){
+			if(!used[i]){
+				permutation[pos] = around[i];
+				used[i] = true;
+				link(pos+1);
+				used[i] = false;
+		}	}*
+	}
+}
+
+
+void ban(){
+
+	while(changed){
+		changed = false;
+
+		for(int y = 0; y < n; y++){
+			for(int x = 0; x < n; x++){
+
+				if( mapp[y][x] != '*' || (x == 0 && y == 0) || (x == n-1 && y == n-1) )
+					continue;
+//				bool plus = true;
+				ind = 0;
+//				vector <coord> banned;
+//				cout << "YX: "<<y<<x<<endl;	//
+
+				for(int i = 0; i < 8; i++){
+					int x1 = x+directions[i].x, y1 = y+directions[i].y;
+					if(x1 < 0 || x1 >= n || y1 < 0 || y1 >= n)
+						continue;
+					if(mapp[y1][x1] == '*')
+						around[ind++] = {y1,x1};
+//						banned.push_back({y1,x1});
+				}
+
+/*				for(auto i:around)	//
+					cout << i.y<<i.x<<" ";	//
+				cout << endl<<"DIFF";	//
+*				if(banned.size() > 3){
+					plus = false;
+				}
+				else{
+					for(auto a:banned){
+						for(auto b:banned){
+							if(a.x == b.x && a.y == b.y)
+								continue;
+							int diff_y = abs(a.y - b.y), diff_x = abs(a.x - b.x);
+							cout << diff_y<<diff_x<<" ";
+							if( diff_y == 2 || diff_x == 2 ){
+								plus = false;
+								break;
+						}	}cout <<endl;
+						if(!plus)
+							break;
+					}
+				}
+*
+
+
+
+				if(ind == 0 || ind == 1){
+					mapp[y][x] = 'x';
+					changed = true;
+				}
+				else if(ind <= 3){
+					link(0);
+					if(linked){
+						mapp[y][x] = 'x';
+						changed = true;
+					}
+				}
+		}	}
+	}
+
+}
+
+
+
+void aCaso(int x, int y, int tmp){	//tmp length
+	cout << "yx: "<<y<<" " << x<<((tmp%10==0)?("    "+(to_string(tmp))):"")<<"\n";
+/*	for(int a = 0; a < n; a++){
+		for(int b = 0; b < n; b++){
+			cout << path[a][b];
+		}
+		cout << "\n";
+	}*
+	if(x == n-1 && y == n-1){
+		if(tmp < length)
+			length = tmp;
+	}
+
+	for(int i = 0; i < 8; i++){
+		int y1 = y + directions[i].y, x1 = x + directions[i].x;
+
+		cout << "\nii: "<<i<<"\n" << y1<<" " <<x1<<endl;
+
+		if(mapp[y1][x1] == '*' && !path[y1][x1] && (x1>=0 && x1<n && y1>=0 && y1<n) ){
+			path[y1][x1] = true;
+
+			for(int a = 0; a < n; a++){
+				for(int b = 0; b < n; b++){
+					cout << path[a][b];
+				}
+				cout << "\n";
+			}
+
+			aCaso(x1,y1,tmp+1);
+			path[y1][x1] = false;
+
+			for(int a = 0; a < n; a++){
+				for(int b = 0; b < n; b++){
+					cout << path[a][b];
+				}
+				cout << "\n";
+			}
+		}
+
+	}
+
+}
+
+
+
+
+
+int main(){
+
+	freopen("input.txt","r",stdin);
+	freopen("output.txt","w",stdout);
+
+
+	cin >> n;
+	for(int a = 0; a < n; a++){
+		for(int b = 0; b < n; b++){
+			cin >> mapp[a][b];
+		}
+	}
+	for(int a = 0; a < n; a++){
+		for(int b = 0; b < n; b++){
+			path[a][b] = 0;
+		}
+	}
+	path[0][0] = 1;
+//	already[0] = "";
+//	already[-1] = "X";
+/*	for(int i = 0; i < 8; i++){
+		used[i] = false;
+	}*
+
+
+	ban();
+	for(int a = 0; a < n; a++){
+		for(int b = 0; b < n; b++){
+			cout <<mapp[a][b] ;
+		}
+		cout <<endl;
+	}
+	aCaso(0,0,1);
+	cout << length;
+
+
+}
+
+
+
+
+
+/*
+void aCaso(int x, int y, int tmp){	//tmp length
+//	already[ind] += (to_string(y)+to_string(x));
+	cout << "yx: "<<x<<" " << y<<((tmp%10==0)?("    "+(to_string(tmp))):"")<<"\n";
+/*	for(int a = 0; a < n; a++){
+		for(int b = 0; b < n; b++){
+			cout << path[a][b];
+		}
+		cout << "\n";
+	}*
+	if(x == n-1 && y == n-1){
+		ind++;
+//		already[ind] = "";
+		for(int a = 0; a < n; a++){
+			for(int b = 0; b < n; b++){
+				cout << path[a][b];
+				path[a][b] = 0;
+			}
+			path[0][0] = 1;
+			cout << "\n";
+		}
+		if(tmp < length)
+			length = tmp;
+		//	cout << length;
+//		return aCaso(0,0,1);
+		for(int a = 0; a < n; a++){
+			for(int b = 0; b < n; b++){
+				cout << path[a][b];
+			}
+			cout <<"\n";}
+			for(int a = 0; a < n; a++){
+				for(int b = 0; b < n; b++){
+					cout << mapp[a][b];
+				}cout <<"\n";	}
+			cout <<"yx: " <<y<<x<<"\n";
+
+	}
+	else{
+		bool c_a = mapp[x+1][y+1] == '*' && !path[x+1][y+1] && x < n-1 && y < n-1,
+				c_b = mapp[x+1][y] == '*' && !path[x+1][y] && x < n-1,
+				c_c = mapp[x][y+1] == '*' && !path[x][y+1] && y < n-1,
+				c_d = mapp[x-1][y+1] == '*' && !path[x-1][y+1] && x > 0 && y < n-1,
+				c_e = mapp[x+1][y-1] == '*' && !path[x+1][y-1] && x < n-1 && y > 0,
+				c_f = mapp[x-1][y] == '*' && !path[x-1][y] && x > 0,
+				c_g = mapp[x][y-1] == '*' && !path[x][y-1] && y > 0,
+				c_h = mapp[x-1][y-1] == '*' && !path[x-1][y-1] && x > 0 && y > 0;
+		if(c_a){
+			path[x+1][y+1] = 1;
+			return aCaso(x+1,y+1,tmp+1);
+			path[x+1][y+1] = 0;
+		}
+		if(c_b){
+			path[x+1] [y] = 1;
+			return aCaso(x+1,y,tmp+1);
+			path[x+1][y] = 0;
+		}
+		if(c_c){
+			path[x][y+1] = 1;
+			return aCaso(x,y+1,tmp+1);
+			path[x][y+1] = 0;
+		}
+		if(c_d){
+			path[x-1][y+1] = 1;
+			return aCaso(x-1,y+1,tmp+1);
+			path[x-1][y+1] = 0;
+		}
+		if(c_e){
+			path[x+1][y-1] = 1;
+			return aCaso(x+1,y-1,tmp+1);
+			path[x+1][y-1] = 0;
+		}
+		if(c_f){
+			path[x-1][y] = 1;
+			return aCaso(x-1,y,tmp+1);
+			path[x-1][y] = 0;
+		}
+		if(c_g){
+			path[x][y-1] = 1;
+			return aCaso(x,y-1,tmp+1);
+			path[x][y-1] = 0;
+			for(int a = 0; a < n; a++){
+						for(int b = 0; b < n; b++){
+							cout << path[a][b];
+						}
+						cout <<"\n";}
+
+		}
+		if(c_h){
+			path[x-1][y-1] = 1;
+			return aCaso(x-1,y-1,tmp+1);
+			path[x-1][y-1] = 0;
+		}
+/*		if( !(c_a || c_b || c_c || c_d || c_e || c_f || c_g || c_h) )
+		{
+			mapp[x][y] = 'x';
+			for(int a = 0; a < n; a++){
+				for(int b = 0; b < n; b++){
+					path[a][b] = 0;
+			}	}
+			path[0][0] = 1;
+			return aCaso(0,0,1);
+		}*
+	}
+
+}
+*/

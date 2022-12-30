@@ -1,0 +1,240 @@
+#include <iostream>
+#include <vector>
+#include <unordered_map>
+#include <set>
+using namespace std;
+
+
+
+
+
+
+unordered_map <int, long long> h;	//skyscrapers heights
+struct grattacielo{
+	int i;	//index
+	long long b;	//budget
+};
+auto byBudget = [](const grattacielo &a, const grattacielo &b){
+	return a.b < b.b;
+};
+auto G = multiset <grattacielo, decltype(byBudget)> (byBudget);	//g for skyscrapers (in order of budget from the smallest)
+struct limit{
+	int i, d;	//index, difference
+};
+unordered_map <int, vector<limit> > L1;	//limits1
+unordered_map <int, vector<limit> > L2;	//limits2
+//set <int> used;
+//std::multiset<grattacielo>::iterator last;
+//int passed = 0;
+
+
+void ricorsiva(int in)	//index
+{
+
+//	bool changed = true;
+	for(auto i:L1[in]){
+		if(h[i.i] != 0 && h[in]+i.d < h[i.i]){
+			h[i.i] = h[in]+i.d;
+			ricorsiva(i.i);
+		}
+	}
+
+}
+
+
+
+long long costruisci(int N, int M, vector<long long>& H, vector<int>& A, vector<int>& B, vector<int>& C)
+{
+	for(int i = 0; i < H.size(); i++)
+		G.insert({i,H[i]});
+	for(int i = 0; i < M; i++){
+		L1[A[i]].push_back({B[i],C[i]});
+		L2[B[i]].push_back({A[i],C[i]});
+	}
+
+
+//	used.insert((*it).i);
+	std::multiset<grattacielo>::iterator it = G.begin();
+	h[(*it).i] = (*it).b;
+//	last = it;
+//	passed = 1;
+
+//	for(auto i:G){
+//		if()
+//	}
+	it++;
+
+//	for(auto i:G) cout << i.i << ","<<i.b<<" ";//
+//	cout <<endl;//
+
+
+
+
+
+
+
+	while(it != G.end())
+	{
+//		cout<<endl;//
+////		long long tot = 0;
+//		for(int i = 0; i < N; i++){//
+////			tot += h[i];
+//			cout<<h[i]<<" ";//
+//		}//
+//		cout<<endl;//
+
+//		cout<<(*it).i<<endl;
+
+		h[(*it).i] = (*it).b;
+
+		bool changed = false;
+		for(auto i:L2[(*it).i]){
+			if(h[i.i] != 0 && h[(*it).i] > h[i.i]+i.d){
+				h[(*it).i] = h[i.i]+i.d;
+				changed = true;
+			}
+		}
+		if(changed) ricorsiva((*it).i);
+
+
+//		ricorsiva( (*it).i );
+
+//		for(auto i:L2[(*it).i])
+//		{
+//			if( h[i.i] != 0 && h[i.i]+i.d < h[(*it).i])
+//			{
+//				h[(*it).i] = h[i.i]+i.d;
+//				ricorsiva( (*it).i );
+//			}
+
+
+//			cout << h[i.i] << " " <<h[(*it).i]<<" " <<(h[i.i]+i.d)<<" // ";
+//			if( h[i.i] != 0) h[(*it).i] = min(h[(*it).i], h[i.i]+i.d);
+//		}
+
+
+//		cout<<endl;
+
+
+//		if((*it).b == (*last).b) passed++;
+//
+//		else{
+//			if(passed > 1){
+//				cout<<"PASSED "<<passed<<endl;
+//				bool changed = false;
+//				do{
+//					changed = false;
+//					for(std::multiset<grattacielo>::iterator i = last; (*i).b == (*last).b; i++){
+//						for(auto j:L[(*i).i]){
+//							cout << H[j.i]<<"=="<<H[(*i).i]<<" "<<(h[j.i]+j.d)<<"<"<<h[(*i).i]<<endl;
+//							if( H[j.i] == H[(*i).i] && h[j.i]+j.d < h[(*i).i] ){
+//								h[(*i).i] = h[j.i]+j.d;
+//								changed = true;
+//							}
+//						}
+//					}
+//				}
+//				while(changed == true);
+//
+//			}
+//
+//			last = it;
+//			passed = 1;
+//
+//		}
+
+
+		it++;
+	}
+
+
+
+
+
+
+//	while(it != G.end())
+//	{
+//		cout<<(*it).i<<endl;
+//		h[(*it).i] = (*it).b;
+//		for(auto i:L[(*it).i]){
+//			cout << h[i.i] << " " <<h[(*it).i]<<" " <<(h[i.i]+i.d)<<" // ";
+//			if( h[i.i] != 0) h[(*it).i] = min(h[(*it).i], h[i.i]+i.d);
+//		}
+//		cout<<endl;
+//
+//
+//		if((*it).b == (*last).b) passed++;
+//
+//		else{
+//			if(passed > 1){
+//				cout<<"PASSED "<<passed<<endl;
+//				bool changed = false;
+//				do{
+//					changed = false;
+//					for(std::multiset<grattacielo>::iterator i = last; (*i).b == (*last).b; i++){
+//						for(auto j:L[(*i).i]){
+//							cout << H[j.i]<<"=="<<H[(*i).i]<<" "<<(h[j.i]+j.d)<<"<"<<h[(*i).i]<<endl;
+//							if( H[j.i] == H[(*i).i] && h[j.i]+j.d < h[(*i).i] ){
+//								h[(*i).i] = h[j.i]+j.d;
+//								changed = true;
+//							}
+//						}
+//					}
+//				}
+//				while(changed == true);
+//
+//			}
+//
+//			last = it;
+//			passed = 1;
+//
+//		}
+//
+//
+//		it++;
+//	}
+
+
+
+//	cout<<endl;//
+	long long tot = 0;
+	for(int i = 0; i < N; i++){//
+		tot += h[i];
+//		cout<<h[i]<<" ";//
+	}//
+//	cout<<endl;//
+
+	return tot;
+
+}
+
+
+
+
+
+int main(){
+
+	int N, M;
+	cin >> N >> M;
+	vector <long long> H;
+	vector <int> A;
+	vector <int> B;
+	vector <int> C;
+	for(int i = 0; i < N; i++){
+		long long tmp;
+		cin >> tmp;
+		H.push_back(tmp);
+	}
+	for(int i = 0; i < M; i++){
+		int a, b, c;
+		cin >> a >> b >> c;
+		A.push_back(a);
+		B.push_back(b);
+		C.push_back(c);
+	}
+
+
+
+	cout << costruisci(N, M, H, A, B, C);
+
+}
